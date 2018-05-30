@@ -1,0 +1,11 @@
+{
+  "name": "table-tennis-table",
+  "version": "1.0.0",
+  "description": "A ranking system for table tennis",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
