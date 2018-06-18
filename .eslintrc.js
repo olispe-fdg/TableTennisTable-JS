@@ -9,6 +9,10 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
         "indent": [
             "error",
             2,

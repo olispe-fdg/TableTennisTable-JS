@@ -7,7 +7,7 @@ function buildLeague (players) {
     validateName(player);
     checkPlayerIsUnique(player);
 
-    if (rows.length == 0 || bottomRow().isFull()) {
+    if (rows.length === 0 || bottomRow().isFull()) {
       addRow();
     }
 
@@ -30,7 +30,7 @@ function buildLeague (players) {
     const winnerRowIndex = findPlayerRowIndex(winner);
     const loserRowIndex = findPlayerRowIndex(loser);
 
-    if (winnerRowIndex - loserRowIndex != 1) {
+    if (winnerRowIndex - loserRowIndex !== 1) {
       throw new InvalidArgumentException(`Cannot record match result. Winner '${winner}' must be one row below loser '${loser}'`);
     }
 
@@ -97,10 +97,10 @@ function validate (gameState) {
   gameState.forEach(function (row, index) {
     const maxLength = index + 1;
     let rowHascorrectLength;
-    if (index == bottomRowIndex) {
+    if (index === bottomRowIndex) {
       rowHascorrectLength = row.length <= maxLength;
     } else {
-      rowHascorrectLength = row.length == maxLength;
+      rowHascorrectLength = row.length === maxLength;
     }
 
     if (!rowHascorrectLength) {
