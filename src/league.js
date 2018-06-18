@@ -1,4 +1,5 @@
 const InvalidArgumentException = require('./invalid_argument_exception');
+const leagueRow = require('./league_row');
 
 function buildLeague (players) {
   const rows = players;
@@ -19,7 +20,7 @@ function buildLeague (players) {
   }
 
   function addRow () {
-    const newRow = leagueRow(rows.length + 1);
+    const newRow = leagueRow.create(rows.length + 1);
     rows.push(newRow);
   }
 
@@ -87,7 +88,7 @@ exports.load = function (gameState) {
   validate(gameState);
 
   const rows = gameState.map(function (row, index) {
-    return leagueRow(index + 1, row);
+    return leagueRow.create(index + 1, row);
   });
   return buildLeague(rows);
 };
@@ -107,19 +108,4 @@ function validate (gameState) {
       throw new InvalidArgumentException('Invalid game state');
     }
   });
-}
-
-function leagueRow (maxSize, players = []) {
-  function swap (playerToRemove, playerToAdd) {
-    const playerIndex = players.findIndex(player => player === playerToRemove);
-    players.splice(playerIndex, 1, playerToAdd);
-  }
-
-  return {
-    getPlayers: function () { return players; },
-    add: function (player) { players.push(player); },
-    isFull: function () { return players.length === maxSize; },
-    includes: function (player) { return players.includes(player); },
-    swap: swap
-  };
 }
