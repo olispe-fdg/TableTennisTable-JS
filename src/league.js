@@ -1,6 +1,19 @@
 const InvalidArgumentException = require('./invalid_argument_exception');
 const leagueRow = require('./league_row');
 
+exports.createLeague = function () {
+  return buildLeague([]);
+};
+
+exports.load = function (gameState) {
+  validate(gameState);
+
+  const rows = gameState.map(function (row, index) {
+    return leagueRow.create(index + 1, row);
+  });
+  return buildLeague(rows);
+};
+
 function buildLeague (players) {
   const rows = players;
 
@@ -79,19 +92,6 @@ function buildLeague (players) {
     getWinner: getWinner
   };
 }
-
-exports.createLeague = function () {
-  return buildLeague([]);
-};
-
-exports.load = function (gameState) {
-  validate(gameState);
-
-  const rows = gameState.map(function (row, index) {
-    return leagueRow.create(index + 1, row);
-  });
-  return buildLeague(rows);
-};
 
 function validate (gameState) {
   const bottomRowIndex = gameState.length - 1;
