@@ -21,7 +21,7 @@ exports.startGame = function (initialLeague) {
   }
 
   function load(command) {
-    const regex = /load \"(.*)\"$/
+    const regex = /load (.*)$/
     const filename = command.match(regex)[1];
     league = fileService.load(filename);
   }
