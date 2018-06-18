@@ -17,7 +17,7 @@ exports.startGame = function (initialLeague) {
   function save(command) {
     const regex = /save \"(.*)\"$/
     const filename = command.match(regex)[1];
-    fileService.save(filename, league);
+    return fileService.save(filename, league);
   }
 
   function load(command) {
@@ -38,7 +38,7 @@ exports.startGame = function (initialLeague) {
         } else if (command === 'winner') {
           return league.getWinner();
         } else if (command.startsWith('save')) {
-          save(command);
+          return save(command);
         } else if (command.startsWith('load')) {
           load(command);
         } else {
