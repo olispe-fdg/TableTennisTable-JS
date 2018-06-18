@@ -1,6 +1,6 @@
-const fileService = require('../src/file_service');
+const fileService = require('./file_service');
 const leagueRenderer = require('./league_renderer');
-const InvalidArgumentException = require('../src/invalid_argument_exception');
+const InvalidArgumentException = require('./invalid_argument_exception');
 
 exports.startGame = function (initialLeague) {
   let league = initialLeague;
