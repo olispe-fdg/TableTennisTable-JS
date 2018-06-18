@@ -14,11 +14,11 @@ function buildLeague (players) {
     bottomRow().add(player);
   }
 
-  function bottomRow() {
+  function bottomRow () {
     return rows[rows.length - 1];
   }
 
-  function addRow() {
+  function addRow () {
     const newRow = leagueRow(rows.length + 1);
     rows.push(newRow);
   }
@@ -45,7 +45,7 @@ function buildLeague (players) {
     return null;
   }
 
-  function validateName(player) {
+  function validateName (player) {
     if (!player.match(/^\w+$/)) {
       throw new InvalidArgumentException(`Player name ${player} contains invalid characters`);
     }
@@ -109,7 +109,7 @@ function validate (gameState) {
   });
 }
 
-function leagueRow(maxSize, players = []) {
+function leagueRow (maxSize, players = []) {
   function swap (playerToRemove, playerToAdd) {
     const playerIndex = players.findIndex(player => player === playerToRemove);
     players.splice(playerIndex, 1, playerToAdd);
