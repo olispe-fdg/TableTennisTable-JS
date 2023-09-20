@@ -67,6 +67,7 @@ describe("recordWin", () => {
 		league.addPlayer("Player");
 		league.addPlayer(winner);
 		league.addPlayer(loser);
+		expect(league.getPlayers()).toEqual([expect.any(Array), [winner, loser]]);
 
 		const recordWin = () => league.recordWin(winner, loser);
 
@@ -124,5 +125,30 @@ describe("recordWin", () => {
 		league.recordWin(winner, loser);
 
 		expect(league.getPlayers()).toEqual([[winner], [loser]]);
+	});
+});
+
+describe("getWinner", () => {
+	test("returns nothing when there are no players", () => {
+		const league = gameState.createLeague();
+
+		const winner = league.getWinner();
+
+		expect(winner).toBeNil();
+	});
+
+	test("returns the player at the top of the rankings", () => {
+		const winner = "Alice";
+		const league = gameState.createLeague();
+		league.addPlayer(winner);
+		league.addPlayer("Bob");
+		league.addPlayer("Player1");
+		league.addPlayer("Player2");
+		league.addPlayer("Player3");
+		expect(league.getPlayers()).toEqual([[winner], expect.any(Array), expect.any(Array)]);
+
+		const receivedWinner = league.getWinner();
+
+		expect(receivedWinner).toBe(winner);
 	});
 });
