@@ -36,3 +36,93 @@ describe("addPlayer", function () {
 		expect(league.getPlayers()).toEqual(expectedRows);
 	});
 });
+
+describe("recordWin", () => {
+	test("throws error when winner is not in the league", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer(loser);
+
+		const recordWin = () => league.recordWin(winner, loser);
+
+		expect(recordWin).toThrow(new InvalidArgumentException(`Player '${winner}' is not in the game`));
+	});
+
+	test("throws error when loser is not in the league", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer(winner);
+
+		const recordWin = () => league.recordWin(winner, loser);
+
+		expect(recordWin).toThrow(new InvalidArgumentException(`Player '${loser}' is not in the game`));
+	});
+
+	test("throws error when winner is in the same row as loser", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer("Player");
+		league.addPlayer(winner);
+		league.addPlayer(loser);
+
+		const recordWin = () => league.recordWin(winner, loser);
+
+		expect(recordWin).toThrow(
+			new InvalidArgumentException(
+				`Cannot record match result. Winner '${winner}' must be one row below loser '${loser}'`
+			)
+		);
+	});
+
+	test("throws error when winner is one row above loser", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer(winner);
+		league.addPlayer(loser);
+		expect(league.getPlayers()).toEqual([[winner], [loser]]);
+
+		const recordWin = () => league.recordWin(winner, loser);
+
+		expect(recordWin).toThrow(
+			new InvalidArgumentException(
+				`Cannot record match result. Winner '${winner}' must be one row below loser '${loser}'`
+			)
+		);
+	});
+
+	test("throws error when winner is two rows below loser", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer(winner);
+		league.addPlayer("Player1");
+		league.addPlayer("Player2");
+		league.addPlayer(loser);
+		expect(league.getPlayers()).toEqual([[winner], expect.any(Array), [loser]]);
+
+		const recordWin = () => league.recordWin(winner, loser);
+
+		expect(recordWin).toThrow(
+			new InvalidArgumentException(
+				`Cannot record match result. Winner '${winner}' must be one row below loser '${loser}'`
+			)
+		);
+	});
+
+	test("swaps winner and loser when winner is one row below loser", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		league.addPlayer(loser);
+		league.addPlayer(winner);
+		expect(league.getPlayers()).toEqual([[loser], [winner]]);
+
+		league.recordWin(winner, loser);
+
+		expect(league.getPlayers()).toEqual([[winner], [loser]]);
+	});
+});
