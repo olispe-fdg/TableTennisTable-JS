@@ -73,3 +73,14 @@ describe("recording wins", () => {
 		expect(recordWin).not.toHaveBeenCalled();
 	});
 });
+
+test("winner command returns league winner", () => {
+	const winner = "Some winner";
+	const league = gameState.createLeague();
+	jest.spyOn(league, "getWinner").mockReturnValue(winner);
+
+	const game = app.startGame(league);
+	const response = game.sendCommand("winner");
+
+	expect(response).toBe(winner);
+});
