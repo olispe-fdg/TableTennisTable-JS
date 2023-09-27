@@ -1,7 +1,10 @@
+const { when } = require("jest-when");
 const app = require("../src/app");
 const gameState = require("../src/league");
 const leagueRenderer = require("../src/league_renderer");
-const { when } = require("jest-when");
+const fileService = require("../src/file_service");
+
+jest.mock("../src/file_service");
 
 test("prints the current state of the league", function () {
 	const rendered = "rendered league";
@@ -83,4 +86,30 @@ test("winner command returns league winner", () => {
 	const response = game.sendCommand("winner");
 
 	expect(response).toBe(winner);
+});
+
+test("save command calls file service with path and league", () => {
+	const league = gameState.createLeague();
+	const path = "/some/file/path.json";
+
+	const game = app.startGame(league);
+	game.sendCommand(`save ${path}`);
+
+	expect(fileService.save).toHaveBeenCalledWith(path, league);
+});
+
+test("load command calls file service with path and overwrites league", () => {
+	const path = "/some/file/path.json";
+	const loadedLeagueWinner = "Loaded league winner";
+	const initialLeague = gameState.createLeague();
+	const loadedLeague = gameState.createLeague();
+	jest.spyOn(initialLeague, "getWinner").mockReturnValue("Initial league winner");
+	jest.spyOn(loadedLeague, "getWinner").mockReturnValue(loadedLeagueWinner);
+	when(fileService.load).calledWith(path).mockReturnValue(loadedLeague).defaultReturnValue(initialLeague);
+
+	const game = app.startGame(initialLeague);
+	game.sendCommand(`load ${path}`);
+	const winner = game.sendCommand("winner");
+
+	expect(winner).toBe(loadedLeagueWinner);
 });
