@@ -1,6 +1,6 @@
 /** @type {import("jest").Config} */
 const config = {
-	testMatch: ["<rootDir>/test/league_test.js"],
+	testMatch: ["<rootDir>/test/league_test.js", "<rootDir>/test/league_renderer_test.js"],
 	setupFilesAfterEnv: ["jest-extended/all"],
 };
 

@@ -15,7 +15,7 @@ describe("addPlayer", function () {
 		}
 	);
 
-	it("throws error when player name already exists", () => {
+	test("throws error when player name already exists", () => {
 		const playerName = "Alice";
 		const league = gameState.createLeague();
 		league.addPlayer(playerName);
@@ -27,7 +27,7 @@ describe("addPlayer", function () {
 		);
 	});
 
-	it("adds player to expected rows in order", () => {
+	test("adds player to expected rows in order", () => {
 		const expectedRows = [["First"], ["Second", "Third"], ["Fourth", "Fifth", "Sixth"], ["Seventh"]];
 		const league = gameState.createLeague();
 
