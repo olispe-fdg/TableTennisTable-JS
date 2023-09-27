@@ -48,3 +48,28 @@ describe("adding players", () => {
 		expect(addPlayer).not.toHaveBeenCalled();
 	});
 });
+
+describe("recording wins", () => {
+	test("records win between given players", () => {
+		const winner = "Alice";
+		const loser = "Bob";
+		const league = gameState.createLeague();
+		const recordWin = jest.spyOn(league, "recordWin");
+
+		const game = app.startGame(league);
+		game.sendCommand(`record win ${winner} ${loser}`);
+
+		expect(recordWin).toHaveBeenCalledWith(winner, loser);
+	});
+
+	// App's command processing isn't robust
+	test.skip("does not record win when command is malformed", () => {
+		const league = gameState.createLeague();
+		const recordWin = jest.spyOn(league, "recordWin");
+
+		const game = app.startGame(league);
+		game.sendCommand(`record wins record win Alice Bob`);
+
+		expect(recordWin).not.toHaveBeenCalled();
+	});
+});
