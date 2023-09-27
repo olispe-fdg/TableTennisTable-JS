@@ -1,10 +1,16 @@
 const { when } = require("jest-when");
+const uuid = require("uuid");
 const app = require("../src/app");
 const gameState = require("../src/league");
 const leagueRenderer = require("../src/league_renderer");
 const fileService = require("../src/file_service");
 
 jest.mock("../src/file_service");
+jest.mock("uuid");
+
+afterEach(() => {
+	jest.resetAllMocks();
+});
 
 test("prints the current state of the league", function () {
 	const rendered = "rendered league";
@@ -112,4 +118,44 @@ test("load command calls file service with path and overwrites league", () => {
 	const winner = game.sendCommand("winner");
 
 	expect(winner).toBe(loadedLeagueWinner);
+});
+
+describe("autosaving", () => {
+	test("adding player triggers autosave", () => {
+		const mockUuid = "2423str-342ftwrs-23pstft3-p3t2wfdw";
+		jest.mocked(uuid.v4).mockReturnValue(mockUuid);
+		const league = gameState.createLeague();
+		jest.spyOn(league, "addPlayer").mockImplementation(() => {});
+
+		const game = app.startGame(league);
+		game.sendCommand("add player Alice");
+
+		expect(fileService.save).toHaveBeenCalledWith(`./saved_games/${mockUuid}.json`, league);
+	});
+
+	test("recording win triggers autosave", () => {
+		const mockUuid = "2423str-342ftwrs-23pstft3-p3t2wfdw";
+		jest.mocked(uuid.v4).mockReturnValue(mockUuid);
+		const league = gameState.createLeague();
+		jest.spyOn(league, "recordWin").mockImplementation(() => {});
+
+		const game = app.startGame(league);
+		game.sendCommand("record win Alice Bob");
+
+		expect(fileService.save).toHaveBeenCalledWith(`./saved_games/${mockUuid}.json`, league);
+	});
+
+	test("subsequent autosaves reuse the same UUID", () => {
+		const mockUuid = "2423str-342ftwrs-23pstft3-p3t2wfdw";
+		jest.mocked(uuid.v4).mockReturnValue("32ftw3pt-3p2st23-2ftw89n9-8stn893").mockReturnValueOnce(mockUuid);
+		const league = gameState.createLeague();
+		jest.spyOn(league, "addPlayer").mockImplementation(() => {});
+
+		const game = app.startGame(league);
+		game.sendCommand("add player Alice");
+		game.sendCommand("add player Bob");
+
+		expect(fileService.save).toHaveBeenNthCalledWith(1, `./saved_games/${mockUuid}.json`, league);
+		expect(fileService.save).toHaveBeenNthCalledWith(2, `./saved_games/${mockUuid}.json`, league);
+	});
 });
