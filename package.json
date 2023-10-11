@@ -5,10 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"test": "npm run test:mocha && npm run test:jest",
-		"test:jest": "jest",
-		"test:mocha": "mocha --recursive && cucumber-js",
-		"mocha": "mocha --recursive",
+		"test": "jest",
 		"feature": "cucumber-js"
 	},
 	"author": "",
