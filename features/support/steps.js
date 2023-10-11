@@ -1,28 +1,22 @@
-const { defineFeature, loadFeature } = require("jest-cucumber");
-const app = require("../../src/app");
-const gameState = require("../../src/league");
+const { Given, When, Then } = require("@cucumber/cucumber");
+const { expect } = require("expect");
 
-const feature = loadFeature("features/game.feature");
+Given("the league has no players", function () {
+	// Nothing to do because a new league always has no players
+});
 
-defineFeature(feature, (test) => {
-	let game;
-	let response;
+When("I print the league", function () {
+	this.response = this.game.sendCommand("print");
+});
 
-	beforeEach(() => {
-		game = app.startGame(gameState.createLeague());
-	});
+Then("I should see that there are no players", function () {
+	expect(this.response).toBe("No players yet");
+});
 
-	test("empty league", ({ given, when, then }) => {
-		given("the league has no players", () => {
-			// Nothing to do because a new league always has no players
-		});
+When("I add the player {string}", function (playerName) {
+	this.game.sendCommand(`add player ${playerName}`);
+});
 
-		when("I print the league", () => {
-			response = game.sendCommand("print");
-		});
-
-		then("I should see that there are no players", () => {
-			expect(response).toBe("No players yet");
-		});
-	});
+Then("I should see the player {string}", function (playerName) {
+	expect(this.game.sendCommand("print")).toContain(playerName);
 });
